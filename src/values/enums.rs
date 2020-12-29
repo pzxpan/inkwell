@@ -61,7 +61,7 @@ macro_rules! enum_value_set {
 }
  {AggregateValueEnum: ArrayValue, StructValue}
 enum_value_set! {AnyValueEnum: ArrayValue, IntValue, FloatValue, PhiValue, FunctionValue, PointerValue, StructValue, VectorValue, InstructionValue}
-enum_value_set! {BasicValueEnum: ArrayValue, IntValue, FloatValue, PointerValue, StructValue, FunctionValue，VectorValue}
+enum_value_set! {BasicValueEnum: ArrayValue, IntValue, FloatValue, PointerValue, StructValue, FunctionValue,VectorValue}
 enum_value_set! {BasicMetadataValueEnum: ArrayValue, IntValue, FloatValue, PointerValue, StructValue, VectorValue, MetadataValue}
 
 impl<'ctx> AnyValueEnum<'ctx> {
@@ -317,7 +317,7 @@ impl<'ctx> BasicValueEnum<'ctx> {
         }
     }
    pub fn is_function_value(self) -> bool {
-        if let AnyValueEnum::FunctionValue(_) = self {
+        if let BasicValueEnum::FunctionValue(_) = self {
             true
         } else {
             false
@@ -364,7 +364,7 @@ impl<'ctx> BasicValueEnum<'ctx> {
         }
     }
     pub fn into_function_value(self) -> FunctionValue<'ctx> {
-        if let AnyValueEnum::FunctionValue(v) = self {
+        if let BasicValueEnum::FunctionValue(v) = self {
             v
         } else {
             panic!("Found {:?} but expected a different variant", self)
