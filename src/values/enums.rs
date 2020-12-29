@@ -59,10 +59,9 @@ macro_rules! enum_value_set {
         )*
     );
 }
-
-enum_value_set! {AggregateValueEnum: ArrayValue, StructValue}
+ {AggregateValueEnum: ArrayValue, StructValue}
 enum_value_set! {AnyValueEnum: ArrayValue, IntValue, FloatValue, PhiValue, FunctionValue, PointerValue, StructValue, VectorValue, InstructionValue}
-enum_value_set! {BasicValueEnum: ArrayValue, IntValue, FloatValue, PointerValue, StructValue, VectorValue}
+enum_value_set! {BasicValueEnum: ArrayValue, IntValue, FloatValue, PointerValue, StructValue, FunctionValue，VectorValue}
 enum_value_set! {BasicMetadataValueEnum: ArrayValue, IntValue, FloatValue, PointerValue, StructValue, VectorValue, MetadataValue}
 
 impl<'ctx> AnyValueEnum<'ctx> {
@@ -317,6 +316,13 @@ impl<'ctx> BasicValueEnum<'ctx> {
             false
         }
     }
+   pub fn is_function_value(self) -> bool {
+        if let AnyValueEnum::FunctionValue(_) = self {
+            true
+        } else {
+            false
+        }
+    }
 
     pub fn is_vector_value(self) -> bool {
         if let BasicValueEnum::VectorValue(_) = self {
@@ -357,7 +363,13 @@ impl<'ctx> BasicValueEnum<'ctx> {
             panic!("Found {:?} but expected a different variant", self)
         }
     }
-
+    pub fn into_function_value(self) -> FunctionValue<'ctx> {
+        if let AnyValueEnum::FunctionValue(v) = self {
+            v
+        } else {
+            panic!("Found {:?} but expected a different variant", self)
+        }
+    }
     pub fn into_struct_value(self) -> StructValue<'ctx> {
         if let BasicValueEnum::StructValue(v) = self {
             v
